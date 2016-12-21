@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "noFallThroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicityReturns": true,
+    "noImplicitThis": true,
+    "target": "es6"
+  },
+  "exclude": [
+    "node_modules",
+    "test"
+  ]
+}

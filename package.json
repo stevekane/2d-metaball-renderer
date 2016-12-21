@@ -1,0 +1,30 @@
+{
+  "name": "renderer-tutorial",
+  "version": "1.0.0",
+  "description": "Tutorial on writing fun shader playgrounds",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test",
+    "watch": "watchify -d -p [ tsify -p tsconfig.json ] -o public/main.js src/main.ts & http-server -p 8081"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stevekane/renderer-tutorial.git"
+  },
+  "keywords": [
+    "renderer",
+    "shaders",
+    "glsl",
+    "webgl"
+  ],
+  "author": "Steve Kane",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stevekane/renderer-tutorial/issues"
+  },
+  "homepage": "https://github.com/stevekane/renderer-tutorial#readme",
+  "devDependencies": {
+    "tsify": "^2.0.7",
+    "typescript": "^2.1.4"
+  }
+}
