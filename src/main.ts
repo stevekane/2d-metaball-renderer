@@ -159,3 +159,5 @@ raf(function render() {
   gl.drawArrays(gl.TRIANGLES, 0, quadSize)
   raf(render)
 })
+
+window.addEventListener('error', (e: any) => alert(e.message))
