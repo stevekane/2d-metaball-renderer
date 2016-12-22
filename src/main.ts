@@ -1,7 +1,7 @@
 import { randInt } from './utils/random'
 import { wrap } from './utils/range'
 
-const SPHERE_COUNT = 100
+const SPHERE_COUNT = 10
 const AREA = [ 800, 450 ]
 
 const radii = new Float32Array(SPHERE_COUNT)
@@ -161,3 +161,4 @@ raf(function render() {
 })
 
 window.addEventListener('error', (e: any) => alert(e.message))
+console.log(gl)
