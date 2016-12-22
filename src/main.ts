@@ -1,8 +1,19 @@
 import { randInt } from './utils/random'
 import { wrap } from './utils/range'
 
-const SPHERE_COUNT = 10
+const canvas = document.createElement('canvas')
+const slider = document.createElement('input')
+const gl = canvas.getContext('webgl')
+
+if ( gl == null ) {
+  throw new Error('gl context could not be obtained')
+}
+
+const MAX_VEC4_UNIFORM_SIZE = gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS)
+const SPHERE_COUNT = MAX_VEC4_UNIFORM_SIZE / 4
 const AREA = [ 800, 450 ]
+
+console.log(MAX_VEC4_UNIFORM_SIZE, SPHERE_COUNT)
 
 const radii = new Float32Array(SPHERE_COUNT)
 const positions = new Float32Array(2 * SPHERE_COUNT)
@@ -59,14 +70,6 @@ void main () {
   gl_FragColor = vec4(u_color, opacity);
 }
 `
-
-const canvas = document.createElement('canvas')
-const slider = document.createElement('input')
-const gl = canvas.getContext('webgl')
-
-if ( gl == null ) {
-  throw new Error('gl context could not be obtained')
-}
 
 const vertex = gl.createShader(gl.VERTEX_SHADER)
 const fragment = gl.createShader(gl.FRAGMENT_SHADER)
