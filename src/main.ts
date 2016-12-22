@@ -10,8 +10,11 @@ if ( gl == null ) {
 }
 
 const MAX_VEC4_UNIFORM_SIZE = gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS)
-const SPHERE_COUNT = MAX_VEC4_UNIFORM_SIZE / 4
+const NUM_FIXED_UNIFORMS = 8 // reserve 8 slots for customization and non-sphere data
+const SPHERE_COUNT = ( MAX_VEC4_UNIFORM_SIZE - NUM_FIXED_UNIFORMS ) / 2
 const AREA = [ 800, 450 ]
+
+console.log(MAX_VEC4_UNIFORM_SIZE)
 
 const radii = new Float32Array(SPHERE_COUNT)
 const positions = new Float32Array(2 * SPHERE_COUNT)
@@ -44,7 +47,6 @@ const fsrc =
 `
 precision mediump float;
 
-uniform vec2 u_resolution;
 uniform float u_time;
 uniform float u_K;
 uniform vec3 u_color;
@@ -106,7 +108,6 @@ const u_locations = {
   u_K: gl.getUniformLocation(program, 'u_K') as WebGLUniformLocation,
   u_color: gl.getUniformLocation(program, 'u_color') as WebGLUniformLocation,
   u_time: gl.getUniformLocation(program, 'u_time') as WebGLUniformLocation,
-  u_resolution: gl.getUniformLocation(program, 'u_resolution') as WebGLUniformLocation,
   u_radii: gl.getUniformLocation(program, 'u_radii') as WebGLUniformLocation,
   u_positions: gl.getUniformLocation(program, 'u_positions') as WebGLUniformLocation
 }
@@ -127,7 +128,7 @@ canvas.width = AREA[0]
 canvas.height = AREA[1]
 canvas.style.boxSizing = 'border-box'
 canvas.style.border = '2px solid Coral'
-document.body.style.margin = '0',
+document.body.style.margin = '0'
 document.body.style.backgroundColor = 'MistyRose'
 document.body.appendChild(canvas)
 document.body.appendChild(slider)
@@ -139,6 +140,17 @@ gl.useProgram(program)
 
 const start = Date.now()
 const raf = window.requestAnimationFrame
+const activeUniformCount = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS)
+const stats = {
+  uniformSize: 0
+}
+
+for ( var i = 0, au; i < activeUniformCount; i++ ) {
+  au = gl.getActiveUniform(program, i)
+  stats.uniformSize += au == null ? 0 : au.size
+}
+
+console.log(stats.uniformSize)
 
 raf(function render() {
   const time = Date.now()
@@ -152,7 +164,6 @@ raf(function render() {
   }
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
   gl.uniform1f(u_locations.u_time, time)
-  gl.uniform2f(u_locations.u_resolution, AREA[0], AREA[1])
   gl.uniform1f(u_locations.u_K, settings.K)
   gl.uniform3f(u_locations.u_color, settings.color[0], settings.color[1], settings.color[2])
   gl.uniform1fv(u_locations.u_radii, radii)
