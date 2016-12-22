@@ -1,7 +1,7 @@
 import { randInt } from './utils/random'
 import { wrap } from './utils/range'
 
-const SPHERE_COUNT = 400
+const SPHERE_COUNT = 100
 const AREA = [ 800, 450 ]
 
 const radii = new Float32Array(SPHERE_COUNT)
