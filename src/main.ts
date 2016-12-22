@@ -1,6 +1,13 @@
 import { randInt } from './utils/random'
 import { wrap } from './utils/range'
 
+/*
+  Create a texture that holds vec3 for position and alpha channel for radius
+  Send it to the GPU and render static circles from it
+  Write a shader that will read/write data from the texture.  ( requires double buffer i think )
+  Replace existing uniform code with texture implementation
+*/
+
 const canvas = document.createElement('canvas')
 const slider = document.createElement('input')
 const gl = canvas.getContext('webgl')
@@ -11,10 +18,8 @@ if ( gl == null ) {
 
 const MAX_VEC4_UNIFORM_SIZE = gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS)
 const NUM_FIXED_UNIFORMS = 8 // reserve 8 slots for customization and non-sphere data
-const SPHERE_COUNT = ( MAX_VEC4_UNIFORM_SIZE - NUM_FIXED_UNIFORMS ) / 2
+const SPHERE_COUNT = Math.max(( MAX_VEC4_UNIFORM_SIZE - NUM_FIXED_UNIFORMS ) / 2, 100)
 const AREA = [ 800, 450 ]
-
-console.log(MAX_VEC4_UNIFORM_SIZE)
 
 const radii = new Float32Array(SPHERE_COUNT)
 const positions = new Float32Array(2 * SPHERE_COUNT)
@@ -145,12 +150,11 @@ const stats = {
   uniformSize: 0
 }
 
+// Statistical information about total uniform size ( registers ? )
 for ( var i = 0, au; i < activeUniformCount; i++ ) {
   au = gl.getActiveUniform(program, i)
   stats.uniformSize += au == null ? 0 : au.size
 }
-
-console.log(stats.uniformSize)
 
 raf(function render() {
   const time = Date.now()
