@@ -20,8 +20,6 @@ for ( var i = 0; i < SPHERE_COUNT; i++ ) {
   velocities[i * 2 + 1] = randInt(-4, 4)
 }
 
-console.log(positions.length)
-
 const vsrc = 
 `
 precision mediump float;
@@ -117,24 +115,19 @@ gl.enableVertexAttribArray(a_locations.a_vertices)
 gl.vertexAttribPointer(a_locations.a_vertices, 2, gl.FLOAT, false, 0, 0)
 gl.bufferData(gl.ARRAY_BUFFER, screenQuad, gl.STATIC_DRAW)
 
+slider.type = 'range'
+slider.min = '0'
+slider.max = '0.1'
+slider.step = '0.01'
+slider.value = settings.K.toString()
+slider.addEventListener('input', _ => settings.K = Number(slider.value))
+
 canvas.width = AREA[0]
 canvas.height = AREA[1]
-Object.assign(slider, {
-  type: 'range',
-  min: 0,
-  max: 0.1,
-  step: 0.01,
-  value: settings.K
-})
-slider.addEventListener('input', _ => settings.K = Number(slider.value))
-Object.assign(canvas.style, {
-  boxSizing: 'border-box',
-  border: '2px solid Coral'
-})
-Object.assign(document.body.style, {
-  margin: '0',
-  backgroundColor: 'MistyRose'
-})
+canvas.style.boxSizing = 'border-box'
+canvas.style.border = '2px solid Coral'
+document.body.style.margin = '0',
+document.body.style.backgroundColor = 'MistyRose'
 document.body.appendChild(canvas)
 document.body.appendChild(slider)
 
