@@ -136,23 +136,26 @@ gl.enable(gl.CULL_FACE)
 gl.clearColor(0, 0, 0, 0)
 gl.useProgram(program)
 
-requestAnimationFrame(function render() {
-  const t = performance.now()
+const start = Date.now()
+const raf = window.requestAnimationFrame
+
+raf(function render() {
+  const time = Date.now()
   const buffer = 1.05
 
-  if ( t > 1000 ) {
+  if ( time - start > 1000 ) {
     for ( var i = 0; i < 2 * SPHERE_COUNT; i += 2 ) {
       positions[i] = wrap(-AREA[0] * buffer, AREA[0] * buffer, positions[i] + velocities[i])
       positions[i + 1] = wrap(-AREA[1] * buffer, AREA[1] * buffer, positions[i + 1]+ velocities[i + 1])
     }
   }
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-  gl.uniform1f(u_locations.u_time, performance.now())
+  gl.uniform1f(u_locations.u_time, time)
   gl.uniform2f(u_locations.u_resolution, AREA[0], AREA[1])
   gl.uniform1f(u_locations.u_K, settings.K)
   gl.uniform3f(u_locations.u_color, settings.color[0], settings.color[1], settings.color[2])
   gl.uniform1fv(u_locations.u_radii, radii)
   gl.uniform2fv(u_locations.u_positions, positions)
   gl.drawArrays(gl.TRIANGLES, 0, quadSize)
-  requestAnimationFrame(render)
+  raf(render)
 })
