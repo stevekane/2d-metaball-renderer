@@ -56,7 +56,7 @@ void main () {
     dist += exp(-u_K * sdf_sphere(u_radii[i], u_positions[i], p));
   }
   dist = -log(dist) / u_K;
-  float opacity = clamp(1. - dist, 0.0, 1.0);
+  float opacity = clamp(.5 - dist, 0.0, 1.0);
 
   gl_FragColor = vec4(u_color, opacity);
 }
