@@ -13,8 +13,6 @@ const MAX_VEC4_UNIFORM_SIZE = gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS)
 const SPHERE_COUNT = MAX_VEC4_UNIFORM_SIZE / 4
 const AREA = [ 800, 450 ]
 
-console.log(MAX_VEC4_UNIFORM_SIZE, SPHERE_COUNT)
-
 const radii = new Float32Array(SPHERE_COUNT)
 const positions = new Float32Array(2 * SPHERE_COUNT)
 const velocities = new Float32Array(2 * SPHERE_COUNT)
@@ -162,6 +160,3 @@ raf(function render() {
   gl.drawArrays(gl.TRIANGLES, 0, quadSize)
   raf(render)
 })
-
-window.addEventListener('error', (e: any) => alert(e.message))
-console.log(gl)
