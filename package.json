@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "node test",
-    "watch": "watchify -d -p [ tsify -p tsconfig.json ] -o public/main.js src/main.ts & http-server -p 8081"
+    "watch": "watchify -d -p [ tsify -p tsconfig.json ] -o public/main.js src/main.ts",
+    "build": "browserify -d -p [ tsify -p tsconfig.json ] -o public/main.js src/main.ts",
+    "serve": "live-server"
   },
   "repository": {
     "type": "git",
