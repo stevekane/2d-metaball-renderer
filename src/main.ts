@@ -63,14 +63,19 @@ float sdf_sphere ( float r, vec2 c, vec2 p ) {
 
 void main () {
   vec2 p = gl_FragCoord.xy;
-  vec2 pos = vec2(0., 0.);
+  vec2 pos;
+  vec2 tex_coord;
   float dist = 0.;
 
   for ( float i = 0.; i < 1.; i += FRACTION ) {
     for ( float j = 0.; j < 1.; j += FRACTION ) {
-      pos = texture2D(u_positions, vec2(i, j)).xy;
+      tex_coord.x = i;
+      tex_coord.y = j;
+      pos = texture2D(u_positions, tex_coord).xy;
+      // THIS IS SLOW because using pos requires the texture read to actually be done
       dist += exp(-u_K * sdf_sphere(RADIUS, pos, p));
     }
+    if ( dist >= 1. ) break;
   }
   dist = -log(dist) / u_K;
   float opacity = clamp(.5 - dist, 0.0, 1.0);
