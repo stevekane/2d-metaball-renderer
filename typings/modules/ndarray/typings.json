@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/5d8373707c4d625fe8d83a7b73a0c866daa5a1cc/ndarray/index.d.ts",
+    "raw": "registry:dt/ndarray#1.0.18+20161025183918",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/5d8373707c4d625fe8d83a7b73a0c866daa5a1cc/ndarray/index.d.ts"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "ndarray": "registry:dt/ndarray#1.0.18+20161025183918"
+  }
+}
