@@ -16,11 +16,12 @@ if ( gl.getExtension('OES_texture_float') == null ) {
 
 const settings = {
   K: 0.2,
-  G: 980, 
-  R: .2,
+  G: 2000, 
+  R: .02,
+  cellSize: 3,
   color: [ .2, .4, .8 ],
 }
-const COUNT = 2048
+const COUNT = 1024
 const positions = new Float32Array(COUNT * 4)
 const velocities = new Float32Array(COUNT * 4)
 const AREA_X = 400
@@ -28,7 +29,7 @@ const AREA_Y = 400
 const BUCKET_X = 32
 const BUCKET_Y = 32
 const BUCKET_COUNT = BUCKET_X * BUCKET_Y
-const MAX_PARTICLES_PER_BUCKET = 64
+const MAX_PARTICLES_PER_BUCKET = 256
 const activeIndices = new Int32Array(BUCKET_COUNT)
 const pSorted = new Float32Array(BUCKET_COUNT * MAX_PARTICLES_PER_BUCKET * 4)
 
@@ -160,8 +161,6 @@ document.body.appendChild(canvas)
 gl.viewport(0, 0, AREA_X, AREA_Y)
 gl.enable(gl.CULL_FACE)
 gl.disable(gl.DEPTH_TEST)
-// gl.enable(gl.BLEND)
-// gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 gl.clearColor(0, 0, 0, 0)
 gl.useProgram(program)
 
@@ -169,31 +168,15 @@ const raf = window.requestAnimationFrame
 const clock = { then: Date.now(), now: Date.now() }
 
 for ( var i = 0; i < positions.length; i += 4 ) {
-  positions[i] = randNum(0, 400)
-  positions[i + 1] = randNum(0, 100) 
-  velocities[i] = randNum(-300, 300)
-  velocities[i + 1] = randNum(100, 600)
+  positions[i] = randNum(0, AREA_X)
+  positions[i + 1] = randNum(0, AREA_Y)
 }
 
-// TODO: uses globals for simplicity atm
 function getBucketIndex ( x: number, y: number ): number {
   if      ( x < 0 || y > AREA_X ) return -1
   else if ( y < 0 || y > AREA_Y ) return -1
   else                            return Math.floor(Math.max(0, x / (AREA_X / BUCKET_X))) +
                                          Math.floor(Math.max(0, y / (AREA_Y / BUCKET_Y))) * BUCKET_Y
-}
-
-function printSorted ( s: Float32Array ) {
-  var msg = ''
-
-  for ( var i = 0; i < s.length / 4; i++ ) {
-    var w = s[i * 4 + 3]
-    var nl = i % MAX_PARTICLES_PER_BUCKET == 0
-
-    msg += nl ? '\n' : ''
-    msg += w
-  }
-  console.log(msg)
 }
 
 raf(function render() {
@@ -205,7 +188,8 @@ raf(function render() {
 
   for ( var i = 0, G = -settings.G, dT = 0.01; i < positions.length; i += 4 ) {
     if ( positions[ i + 1 ] < Math.random() * -100 ) {
-      velocities[i + 1] = randNum(600, 900)
+      velocities[i] = randNum(-200, 200)
+      velocities[i + 1] = randNum(800, 1200)
       positions[i] = AREA_X / 2
       positions[i + 1] = 0
     }
@@ -220,8 +204,8 @@ raf(function render() {
 
     if ( bIndex == -1 ) continue
 
-    for ( var k = -1; k <= 1; k++ ) {
-      for ( var l = -1; l <= 1; l++ ) {
+    for ( var k = -settings.cellSize; k <= settings.cellSize; k++ ) {
+      for ( var l = -settings.cellSize; l <= settings.cellSize; l++ ) {
         var index = bIndex - l - k * BUCKET_X
         var aIndex = activeIndices[index]
 
